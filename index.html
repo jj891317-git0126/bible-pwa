@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <title>성경 통독 (평일 1년)</title>
+  <style>
+    body { font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif; margin:0; }
+    header { padding:16px; border-bottom:1px solid #eee; }
+    h1 { margin:0; font-size:18px; }
+    .progress { margin-top:6px; font-size:13px; color:#444; }
+    .row { display:flex; gap:12px; padding:14px 16px; border-bottom:1px solid #f1f1f1; }
+    .row.done { background:#f6fff6; }
+    .day { width:60px; font-weight:700; }
+    .title { flex:1; font-size:14px; }
+    .check { font-size:20px; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>성경 통독 (평일 1년)</h1>
+  <div class="progress" id="progress">진행률: -</div>
+</header>
+<main id="list"></main>
+<script>
+const STORAGE_KEY="bible_checks_v1";
+let PLAN=[];
+let CHECKS=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");
+
+function save(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(CHECKS));
+  updateProgress();
+}
+function updateProgress(){
+  const total=PLAN.length;
+  const done=Object.values(CHECKS).filter(Boolean).length;
+  document.getElementById("progress").textContent=`진행률: ${done}/${total} (${Math.round(done/total*100)}%)`;
+}
+function render(){
+  const root=document.getElementById("list");
+  root.innerHTML="";
+  PLAN.forEach(item=>{
+    const row=document.createElement("div");
+    row.className="row"+(CHECKS[item.day]?" done":"");
+    row.onclick=()=>{CHECKS[item.day]=!CHECKS[item.day]; save(); render();};
+    row.innerHTML=`<div class="day">Day ${item.day}</div>
+                   <div class="title">${item.type==="buffer"?"따라잡기/복습":item.title}</div>
+                   <div class="check">${CHECKS[item.day]?"✅":"⬜️"}</div>`;
+    root.appendChild(row);
+  });
+}
+fetch("./plan.json").then(r=>r.json()).then(d=>{
+  PLAN=d.plan;
+  updateProgress();
+  render();
+});
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("./sw.js");
+}
+</script>
+</body>
+</html>
