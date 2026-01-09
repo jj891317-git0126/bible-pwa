@@ -11,32 +11,43 @@
   <title>성경 통독 (평일 1년)</title>
 
   <style>
-    body { font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",Arial,sans-serif; margin:0; background:#fff; color:#0f172a; }
-    header{ position:sticky; top:0; z-index:10; background:#fff; padding:14px 16px; border-bottom:1px solid #eee; }
-    h1{ margin:0; font-size:18px; }
-    .sub{ margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-    .pill{ background:#f1f5f9; padding:6px 10px; border-radius:999px; font-size:13px; color:#334155; }
-    .btn{ border:1px solid #e2e8f0; background:#fff; padding:7px 10px; border-radius:10px; cursor:pointer; font-size:13px; color:#0f172a; }
-    .btnPrimary{ background:#0f172a; color:#fff; }
-    .btnDanger{ border-color:#fecaca; }
-    input[type="text"]{ flex:1; padding:10px 12px; border:1px solid #e2e8f0; border-radius:12px; font-size:14px; }
-    input[type="date"], select{ padding:8px 10px; border:1px solid #e2e8f0; border-radius:10px; font-size:13px; background:#fff; }
-    .search{ width:100%; margin-top:10px; display:flex; gap:8px; }
-    main{ padding:8px 0 60px; }
-    .row{ display:flex; gap:12px; padding:14px 16px; border-bottom:1px solid #f1f5f9; align-items:center; }
-    .row.done{ background:#f6fff6; }
-    .day{ width:110px; font-weight:900; font-size:13px; white-space:pre-line; }
-    .title{ flex:1; }
-    .t1{ font-size:14px; font-weight:900; }
-    .t2{ margin-top:5px; font-size:12px; color:#475569; line-height:1.35; }
-    .check{ font-size:20px; }
+    body{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",Arial,sans-serif;margin:0;background:#fff;color:#0f172a}
+    header{position:sticky;top:0;z-index:10;background:#fff;padding:14px 16px;border-bottom:1px solid #eee}
+    h1{margin:0;font-size:18px}
+    .sub{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .pill{background:#f1f5f9;padding:6px 10px;border-radius:999px;font-size:13px;color:#334155}
+    .btn{border:1px solid #e2e8f0;background:#fff;padding:7px 10px;border-radius:10px;cursor:pointer;font-size:13px;color:#0f172a}
+    .btnPrimary{background:#0f172a;color:#fff}
+    .btnDanger{border-color:#fecaca}
+    input[type="date"],select{padding:8px 10px;border:1px solid #e2e8f0;border-radius:10px;font-size:13px;background:#fff}
+    input[type="text"]{flex:1;padding:10px 12px;border:1px solid #e2e8f0;border-radius:12px;font-size:14px}
+    .search{width:100%;margin-top:10px;display:flex;gap:8px}
+    main{padding:8px 0 60px}
+    .row{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid #f1f5f9;align-items:center}
+    .row.done{background:#f6fff6}
+    .day{width:120px;font-weight:900;font-size:13px;white-space:pre-line}
+    .title{flex:1}
+    .t1{font-size:14px;font-weight:900}
+    .t2{margin-top:5px;font-size:12px;color:#475569;line-height:1.35}
+    .check{font-size:20px}
+
+    /* 에러 박스 */
+    .errorBox{
+      margin:12px 16px; padding:12px 12px; border:1px solid #fecaca;
+      background:#fff5f5; border-radius:12px; color:#7f1d1d; font-size:13px; line-height:1.45;
+      white-space:pre-wrap;
+    }
+    .okBox{
+      margin:12px 16px; padding:10px 12px; border:1px solid #bbf7d0;
+      background:#f0fdf4; border-radius:12px; color:#14532d; font-size:13px;
+    }
 
     /* 축하 모달 */
-    .overlay{ position:fixed; inset:0; background:rgba(15,23,42,0.45); display:none; align-items:center; justify-content:center; padding:18px; z-index:999; }
-    .modal{ width:min(420px,100%); background:#fff; border-radius:18px; padding:16px 16px 14px; box-shadow:0 18px 60px rgba(0,0,0,0.2); }
-    .modal h2{ margin:0; font-size:18px; }
-    .modal p{ margin:10px 0 0; font-size:13px; color:#334155; line-height:1.45; }
-    .modal .actions{ margin-top:14px; display:flex; justify-content:flex-end; }
+    .overlay{position:fixed;inset:0;background:rgba(15,23,42,0.45);display:none;align-items:center;justify-content:center;padding:18px;z-index:999}
+    .modal{width:min(420px,100%);background:#fff;border-radius:18px;padding:16px 16px 14px;box-shadow:0 18px 60px rgba(0,0,0,0.2)}
+    .modal h2{margin:0;font-size:18px}
+    .modal p{margin:10px 0 0;font-size:13px;color:#334155;line-height:1.45}
+    .modal .actions{margin-top:14px;display:flex;justify-content:flex-end}
   </style>
 </head>
 
@@ -53,35 +64,30 @@
   </div>
 
   <div class="sub">
-    <label class="btn">
-      시작일
-      <input id="startDate" type="date" />
-    </label>
-
+    시작일 <input id="startDate" type="date" />
     <select id="viewMode">
       <option value="all">전체 보기</option>
       <option value="todo">미완료만</option>
       <option value="done">완료만</option>
     </select>
 
-    <button class="btn" id="exportBtn">백업 내보내기</button>
-
+    <button class="btn" id="exportBtn">백업</button>
     <label class="btn">
-      백업 가져오기
-      <input id="importFile" type="file" accept="application/json" style="display:none" />
+      복원 <input id="importFile" type="file" accept="application/json" style="display:none" />
     </label>
-
-    <button class="btn btnDanger" id="resetBtn">전체 체크 초기화</button>
+    <button class="btn btnDanger" id="resetBtn">초기화</button>
   </div>
 
   <div class="search">
-    <input id="q" type="text" placeholder="검색: 창세기, Day 120, 1/1/26, 목" />
+    <input id="q" type="text" placeholder="검색: Day 120, 1/1/26 (목)" />
     <button class="btn" id="clearSearch">지우기</button>
   </div>
 </header>
 
+<div id="msg"></div>
 <main id="list"></main>
 
+<!-- 축하 모달 -->
 <div class="overlay" id="overlay">
   <div class="modal" role="dialog" aria-modal="true">
     <h2 id="celebrateTitle">🎉 한 달 완료!</h2>
@@ -93,226 +99,450 @@
 </div>
 
 <script>
-  // ---- Storage keys (예전 키도 자동 이관)
-  const START_KEYS = ["bible_start_date_v4","bible_start_date_v3","bible_start_final","bible_start_date","bible_start"];
-  const CHECK_KEYS = ["bible_reading_checks_v4","bible_reading_checks_v3","bible_checks_final","bible_reading_checks_v2","bible_checks_v1"];
+/* =========================
+   안정화 포인트
+   1) iOS 날짜(UTC로 하루 밀림) 방지: parseLocalDate 사용
+   2) plan.json 항목에 readings/title이 없어도 죽지 않게 방어
+   3) 어떤 JS 에러가 나도 화면에 표시
+   ========================= */
 
-  const STORAGE_START  = "bible_start_date_v4";
-  const STORAGE_CHECKS = "bible_reading_checks_v4";
-  const STORAGE_CELEB  = "bible_month_celebrated_v4";
+const STORAGE_START  = "bible_start_date_v6";
+const STORAGE_CHECKS = "bible_reading_checks_v6";
+const STORAGE_CELEB  = "bible_month_celebrated_v6";
 
-  let PLAN = [];
-  let CHECKS = {};
-  let FILTER = "";
-  let VIEW_MODE = "all";
+let PLAN = [];
+let CHECKS = {};
+let FILTER = "";
+let VIEW_MODE = "all";
 
-  // Day -> "1/1/26 (목)"
-  let DAY_TO_DATE_STR = {};
-  // Month -> [day...]
-  let MONTH_TO_DAYS = {};
+let DAY_TO_DATE_STR = {}; // day -> "1/1/26 (목)"
+let MONTH_TO_DAYS = {};   // "YYYY-MM" -> [day...]
 
-  const WD_KO = ["일","월","화","수","목","금","토"];
+const WD_KO = ["일","월","화","수","목","금","토"];
 
-  // ---- NT books
-  const NT_BOOKS = new Set([
-    "Matthew","Mark","Luke","John","Acts","Romans",
-    "1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians",
-    "1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon",
-    "Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"
-  ]);
+const NT_BOOKS = new Set([
+  "Matthew","Mark","Luke","John","Acts","Romans",
+  "1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians",
+  "1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon",
+  "Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"
+]);
 
-  // ---- Korean book names
-  const BOOK_KO = {
-    "Genesis":"창세기","Exodus":"출애굽기","Leviticus":"레위기","Numbers":"민수기","Deuteronomy":"신명기",
-    "Joshua":"여호수아","Judges":"사사기","Ruth":"룻기","1 Samuel":"사무엘상","2 Samuel":"사무엘하",
-    "1 Kings":"열왕기상","2 Kings":"열왕기하","1 Chronicles":"역대상","2 Chronicles":"역대하",
-    "Ezra":"에스라","Nehemiah":"느헤미야","Esther":"에스더","Job":"욥기","Psalms":"시편",
-    "Proverbs":"잠언","Ecclesiastes":"전도서","Song of Solomon":"아가","Isaiah":"이사야",
-    "Jeremiah":"예레미야","Lamentations":"예레미야애가","Ezekiel":"에스겔","Daniel":"다니엘",
-    "Hosea":"호세아","Joel":"요엘","Amos":"아모스","Obadiah":"오바댜","Jonah":"요나",
-    "Micah":"미가","Nahum":"나훔","Habakkuk":"하박국","Zephaniah":"스바냐","Haggai":"학개",
-    "Zechariah":"스가랴","Malachi":"말라기",
-    "Matthew":"마태복음","Mark":"마가복음","Luke":"누가복음","John":"요한복음","Acts":"사도행전",
-    "Romans":"로마서","1 Corinthians":"고린도전서","2 Corinthians":"고린도후서","Galatians":"갈라디아서",
-    "Ephesians":"에베소서","Philippians":"빌립보서","Colossians":"골로새서",
-    "1 Thessalonians":"데살로니가전서","2 Thessalonians":"데살로니가후서",
-    "1 Timothy":"디모데전서","2 Timothy":"디모데후서","Titus":"디도서","Philemon":"빌레몬서",
-    "Hebrews":"히브리서","James":"야고보서","1 Peter":"베드로전서","2 Peter":"베드로후서",
-    "1 John":"요한일서","2 John":"요한이서","3 John":"요한삼서","Jude":"유다서","Revelation":"요한계시록"
-  };
+const BOOK_KO = {
+  "Genesis":"창세기","Exodus":"출애굽기","Leviticus":"레위기","Numbers":"민수기","Deuteronomy":"신명기",
+  "Joshua":"여호수아","Judges":"사사기","Ruth":"룻기","1 Samuel":"사무엘상","2 Samuel":"사무엘하",
+  "1 Kings":"열왕기상","2 Kings":"열왕기하","1 Chronicles":"역대상","2 Chronicles":"역대하",
+  "Ezra":"에스라","Nehemiah":"느헤미야","Esther":"에스더","Job":"욥기","Psalms":"시편",
+  "Proverbs":"잠언","Ecclesiastes":"전도서","Song of Solomon":"아가","Isaiah":"이사야",
+  "Jeremiah":"예레미야","Lamentations":"예레미야애가","Ezekiel":"에스겔","Daniel":"다니엘",
+  "Hosea":"호세아","Joel":"요엘","Amos":"아모스","Obadiah":"오바댜","Jonah":"요나",
+  "Micah":"미가","Nahum":"나훔","Habakkuk":"하박국","Zephaniah":"스바냐","Haggai":"학개",
+  "Zechariah":"스가랴","Malachi":"말라기",
+  "Matthew":"마태복음","Mark":"마가복음","Luke":"누가복음","John":"요한복음","Acts":"사도행전",
+  "Romans":"로마서","1 Corinthians":"고린도전서","2 Corinthians":"고린도후서","Galatians":"갈라디아서",
+  "Ephesians":"에베소서","Philippians":"빌립보서","Colossians":"골로새서",
+  "1 Thessalonians":"데살로니가전서","2 Thessalonians":"데살로니가후서",
+  "1 Timothy":"디모데전서","2 Timothy":"디모데후서","Titus":"디도서","Philemon":"빌레몬서",
+  "Hebrews":"히브리서","James":"야고보서","1 Peter":"베드로전서","2 Peter":"베드로후서",
+  "1 John":"요한일서","2 John":"요한이서","3 John":"요한삼서","Jude":"유다서","Revelation":"요한계시록"
+};
 
-  function bookName(en){ return BOOK_KO[en] || en; }
-  function isNT(bookEn){ return NT_BOOKS.has(bookEn); }
+function showError(txt){ document.getElementById("msg").innerHTML = `<div class="errorBox">${escapeHtml(txt)}</div>`; }
+function showOK(txt){ document.getElementById("msg").innerHTML = `<div class="okBox">${escapeHtml(txt)}</div>`; }
+function clearMsg(){ document.getElementById("msg").innerHTML = ""; }
 
-  // ---- Date helpers (중요: iOS UTC 버그 방지)
-  function parseLocalDate(yyyy_mm_dd){
-    // "2026-01-01" -> new Date(2026,0,1) (로컬 자정)
-    const [y,m,d] = (yyyy_mm_dd || "").split("-").map(n => parseInt(n,10));
-    if (!y || !m || !d) return null;
-    return new Date(y, m-1, d);
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function bookName(en){ return BOOK_KO[en] || en; }
+function isNT(bookEn){ return NT_BOOKS.has(bookEn); }
+
+function parseLocalDate(yyyy_mm_dd){
+  const [y,m,d] = (yyyy_mm_dd||"").split("-").map(n=>parseInt(n,10));
+  if(!y||!m||!d) return null;
+  return new Date(y, m-1, d); // 로컬 자정
+}
+function toDateOnly(dt){ return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()); }
+function isWeekend(d){ const x=d.getDay(); return x===0 || x===6; }
+
+function fmtMDYYWD(d){
+  const mm=d.getMonth()+1, dd=d.getDate(), yy=String(d.getFullYear()).slice(-2), wd=WD_KO[d.getDay()];
+  return `${mm}/${dd}/${yy} (${wd})`;
+}
+function monthKey(d){
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  return `${y}-${m}`;
+}
+function monthLabelKo(key){
+  const [y,m]=key.split("-");
+  return `${y}년 ${parseInt(m,10)}월`;
+}
+
+function rebuildMaps(){
+  DAY_TO_DATE_STR = {};
+  MONTH_TO_DAYS = {};
+
+  const startStr = localStorage.getItem(STORAGE_START) || document.getElementById("startDate").value;
+  if(!startStr) return;
+
+  let d = parseLocalDate(startStr);
+  if(!d) return;
+  d = toDateOnly(d);
+
+  while(isWeekend(d)) d.setDate(d.getDate()+1);
+
+  for(let day=1; day<=PLAN.length; day++){
+    while(isWeekend(d)) d.setDate(d.getDate()+1);
+
+    DAY_TO_DATE_STR[day] = fmtMDYYWD(d);
+
+    const mk = monthKey(d);
+    if(!MONTH_TO_DAYS[mk]) MONTH_TO_DAYS[mk] = [];
+    MONTH_TO_DAYS[mk].push(day);
+
+    d.setDate(d.getDate()+1);
   }
-  function toDateOnly(dt){ return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()); }
-  function isWeekend(d){ const x=d.getDay(); return x===0 || x===6; }
+}
 
-  function fmtMDYYWithWD(d){
-    const mm = d.getMonth()+1;
-    const dd = d.getDate();
-    const yy = String(d.getFullYear()).slice(-2);
-    const wd = WD_KO[d.getDay()];
-    return `${mm}/${dd}/${yy} (${wd})`;
-  }
-  function monthKey(d){
-    const y = d.getFullYear();
-    const m = String(d.getMonth()+1).padStart(2,"0");
-    return `${y}-${m}`;
-  }
-  function monthLabelKo(key){
-    const [y,m] = key.split("-");
-    return `${y}년 ${parseInt(m,10)}월`;
-  }
+function readingTitleKo(item){
+  const base = (item && item.title) ? String(item.title) : "읽기";
+  // 제목에 영어 책명이 포함되어 있으면 한글로 변환
+  let t = base;
+  for (const [en, ko] of Object.entries(BOOK_KO)) t = t.split(en).join(ko);
+  return t;
+}
+function readingDetailKo(item){
+  if(!item) return "";
+  if(item.type !== "read") return "밀린 분량을 따라잡거나, 복습/묵상용으로 사용하세요.";
+  const readings = Array.isArray(item.readings) ? item.readings : [];
+  if(readings.length === 0) return "";
+  return readings.map(r=>{
+    const b = r?.book ? bookName(r.book) : "";
+    const c = (r?.chapter ?? "");
+    return (b && c!=="") ? `${b} ${c}장` : (b || "");
+  }).filter(Boolean).join(", ");
+}
 
-  // ---- Start date migration
-  function getStartDate(){
-    const v = (localStorage.getItem(STORAGE_START) || "").trim();
-    if (v) return v;
-    for (const k of START_KEYS) {
-      const old = (localStorage.getItem(k) || "").trim();
-      if (old) { localStorage.setItem(STORAGE_START, old); return old; }
-    }
-    const inputVal = (document.getElementById("startDate").value || "").trim();
-    if (inputVal) { localStorage.setItem(STORAGE_START, inputVal); return inputVal; }
-    return "";
-  }
+function dayIndexFromStartSkippingWeekends(startStr, today){
+  let d = parseLocalDate(startStr);
+  if(!d) return 0;
+  d = toDateOnly(d);
 
-  function loadChecks(){
-    try {
-      const v = JSON.parse(localStorage.getItem(STORAGE_CHECKS) || "null");
-      if (v && typeof v === "object") { CHECKS = v; return; }
-    } catch {}
-    for (const k of CHECK_KEYS) {
-      try {
-        const v = JSON.parse(localStorage.getItem(k) || "null");
-        if (v && typeof v === "object") {
-          CHECKS = v;
-          localStorage.setItem(STORAGE_CHECKS, JSON.stringify(CHECKS));
-          return;
-        }
-      } catch {}
-    }
-    CHECKS = {};
-  }
+  let t = toDateOnly(today);
+  while(isWeekend(d)) d.setDate(d.getDate()+1);
 
-  function saveChecks(){
-    localStorage.setItem(STORAGE_CHECKS, JSON.stringify(CHECKS));
-    updateStats();
-    updateTodayBox();
-    maybeCelebrateMonthlyCompletion();
+  let count=0;
+  while(d<=t){
+    if(!isWeekend(d)) count++;
+    d.setDate(d.getDate()+1);
+  }
+  return count;
+}
+
+function updateTodayBox(){
+  const box = document.getElementById("todayBox");
+  const startStr = localStorage.getItem(STORAGE_START) || document.getElementById("startDate").value;
+  if(!startStr){ box.textContent="오늘 분량: 시작일을 설정하세요"; return; }
+
+  const dayNum = dayIndexFromStartSkippingWeekends(startStr, new Date());
+  const item = PLAN.find(p => Number(p.day) === Number(dayNum));
+
+  if(!item){
+    box.textContent = (dayNum > PLAN.length) ? "오늘 분량: 완료!" : `오늘 분량: Day ${dayNum}`;
+    return;
   }
 
-  // ---- Mapping rebuild (weekdays only)
-  function rebuildMaps(){
-    DAY_TO_DATE_STR = {};
-    MONTH_TO_DAYS = {};
+  const dateStr = DAY_TO_DATE_STR[dayNum] ? ` · ${DAY_TO_DATE_STR[dayNum]}` : "";
+  const title = (item.type === "buffer") ? "따라잡기/복습" : readingTitleKo(item);
+  box.textContent = `오늘 분량: Day ${dayNum}${dateStr} · ${title}`;
+}
 
-    const startStr = getStartDate();
-    if (!startStr) return false;
+function updateStats(){
+  const total = PLAN.length;
+  const done = Object.values(CHECKS).filter(Boolean).length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById("progressAll").textContent = `전체: ${done}/${total} (${pct}%)`;
 
-    let d = parseLocalDate(startStr);
-    if (!d) return false;
-    d = toDateOnly(d);
+  let otT=0, otD=0, ntT=0, ntD=0;
+  for(const item of PLAN){
+    if(item?.type !== "read") continue;
+    const readings = Array.isArray(item.readings) ? item.readings : [];
+    const firstBook = readings[0]?.book;
+    if(!firstBook) continue;
 
-    while (isWeekend(d)) d.setDate(d.getDate()+1);
-
-    for (let day=1; day<=PLAN.length; day++){
-      while (isWeekend(d)) d.setDate(d.getDate()+1);
-
-      DAY_TO_DATE_STR[day] = fmtMDYYWithWD(d);
-
-      const mk = monthKey(d);
-      if (!MONTH_TO_DAYS[mk]) MONTH_TO_DAYS[mk] = [];
-      MONTH_TO_DAYS[mk].push(day);
-
-      d.setDate(d.getDate()+1);
-    }
-    return true;
+    const doneThis = !!CHECKS[item.day];
+    if(isNT(firstBook)){ ntT++; if(doneThis) ntD++; }
+    else { otT++; if(doneThis) otD++; }
   }
+  document.getElementById("progressOT").textContent = `구약: ${otD}/${otT} (${otT?Math.round(otD/otT*100):0}%)`;
+  document.getElementById("progressNT").textContent = `신약: ${ntD}/${ntT} (${ntT?Math.round(ntD/ntT*100):0}%)`;
+}
 
-  // ---- UI text helpers
-  function readingTitleKo(item){
-    let t = item.title || "";
-    for (const [en,ko] of Object.entries(BOOK_KO)) t = t.split(en).join(ko);
-    return t;
-  }
-  function readingDetailKo(item){
-    if (item.type !== "read") return "밀린 분량을 따라잡거나, 복습/묵상용으로 사용하세요.";
-    return item.readings.map(r=>`${bookName(r.book)} ${r.chapter}장`).join(", ");
-  }
+function matchesFilter(item){
+  const dayNum = Number(item.day);
+  const done = !!CHECKS[dayNum];
 
-  function matchesFilter(item){
+  if(VIEW_MODE==="done" && !done) return false;
+  if(VIEW_MODE==="todo" && done) return false;
+
+  if(!FILTER) return true;
+  const f = FILTER.toLowerCase();
+  const hay = [
+    `day ${dayNum}`,
+    readingTitleKo(item),
+    readingDetailKo(item),
+    (DAY_TO_DATE_STR[dayNum]||"")
+  ].join(" ").toLowerCase();
+  return hay.includes(f);
+}
+
+function render(){
+  const root = document.getElementById("list");
+  root.innerHTML = "";
+  const frag = document.createDocumentFragment();
+
+  for(const item of PLAN){
+    if(!matchesFilter(item)) continue;
+
     const dayNum = Number(item.day);
     const isDone = !!CHECKS[dayNum];
 
-    if (VIEW_MODE==="done" && !isDone) return false;
-    if (VIEW_MODE==="todo" && isDone) return false;
+    const row = document.createElement("div");
+    row.className = "row" + (isDone ? " done" : "");
+    row.id = `day-${dayNum}`;
 
-    if (!FILTER) return true;
-    const f = FILTER.toLowerCase();
-    const hay = [
-      `day ${dayNum}`,
-      readingTitleKo(item),
-      readingDetailKo(item),
-      (DAY_TO_DATE_STR[dayNum]||"")
-    ].join(" ").toLowerCase();
-    return hay.includes(f);
+    row.addEventListener("click", ()=>{
+      CHECKS[dayNum] = !CHECKS[dayNum];
+      localStorage.setItem(STORAGE_CHECKS, JSON.stringify(CHECKS));
+      updateStats();
+      updateTodayBox();
+      maybeCelebrateMonthlyCompletion();
+      render();
+    });
+
+    const day = document.createElement("div");
+    day.className = "day";
+    day.textContent = `Day ${dayNum}\n${DAY_TO_DATE_STR[dayNum] || ""}`;
+
+    const title = document.createElement("div");
+    title.className = "title";
+
+    const t1 = document.createElement("div");
+    t1.className = "t1";
+    t1.textContent = (item.type === "buffer") ? "따라잡기/복습" : readingTitleKo(item);
+
+    const t2 = document.createElement("div");
+    t2.className = "t2";
+    t2.textContent = readingDetailKo(item);
+
+    const check = document.createElement("div");
+    check.className = "check";
+    check.textContent = isDone ? "✅" : "⬜️";
+
+    title.appendChild(t1);
+    title.appendChild(t2);
+
+    row.appendChild(day);
+    row.appendChild(title);
+    row.appendChild(check);
+
+    frag.appendChild(row);
   }
 
-  // ---- Today
-  function dayIndexFromStartSkippingWeekends(startStr, today){
-    let d = parseLocalDate(startStr);
-    if (!d) return 0;
-    d = toDateOnly(d);
+  root.appendChild(frag);
+}
 
-    let t = toDateOnly(today);
-    while (isWeekend(d)) d.setDate(d.getDate()+1);
+function scrollToDay(dayNum){
+  const el = document.getElementById(`day-${dayNum}`);
+  if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+}
 
-    let count=0;
-    while (d<=t){
-      if (!isWeekend(d)) count++;
-      d.setDate(d.getDate()+1);
+/* ----- 월 완료 축하 ----- */
+function getCelebratedMap(){
+  try { return JSON.parse(localStorage.getItem(STORAGE_CELEB) || "{}") || {}; }
+  catch { return {}; }
+}
+function setCelebratedMap(obj){
+  localStorage.setItem(STORAGE_CELEB, JSON.stringify(obj));
+}
+function showCelebrate(mk){
+  document.getElementById("celebrateTitle").textContent = `🎉 ${monthLabelKo(mk)} 완료!`;
+  document.getElementById("celebrateBody").textContent = "이번 달에 해당하는 Day를 모두 체크하셨어요. 정말 잘하셨습니다!";
+  document.getElementById("overlay").style.display = "flex";
+}
+function maybeCelebrateMonthlyCompletion(){
+  if(!Object.keys(MONTH_TO_DAYS).length) return;
+
+  const celebrated = getCelebratedMap();
+  for(const mk of Object.keys(MONTH_TO_DAYS)){
+    if(celebrated[mk]) continue;
+    const days = MONTH_TO_DAYS[mk] || [];
+    if(!days.length) continue;
+    const allDone = days.every(d => !!CHECKS[d]);
+    if(allDone){
+      celebrated[mk] = true;
+      setCelebratedMap(celebrated);
+      showCelebrate(mk);
+      break;
     }
-    return count;
+  }
+}
+
+/* ----- 백업/복원 ----- */
+function exportBackup(){
+  const payload = {
+    savedAt: new Date().toISOString(),
+    checks: CHECKS,
+    startDate: (localStorage.getItem(STORAGE_START) || document.getElementById("startDate").value || null),
+    celebratedMonths: getCelebratedMap()
+  };
+  const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "bible-backup.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+async function importBackup(file){
+  const text = await file.text();
+  const parsed = JSON.parse(text);
+
+  CHECKS = parsed?.checks || {};
+  localStorage.setItem(STORAGE_CHECKS, JSON.stringify(CHECKS));
+
+  if(parsed?.startDate){
+    localStorage.setItem(STORAGE_START, parsed.startDate);
+    document.getElementById("startDate").value = parsed.startDate;
+  }
+  if(parsed?.celebratedMonths){
+    localStorage.setItem(STORAGE_CELEB, JSON.stringify(parsed.celebratedMonths));
   }
 
-  function updateTodayBox(){
-    const box = document.getElementById("todayBox");
-    const start = getStartDate();
-    if (!start) { box.textContent="오늘 분량: 시작일을 설정하세요"; return; }
+  rebuildMaps();
+  updateStats();
+  updateTodayBox();
+  render();
+  maybeCelebrateMonthlyCompletion();
+}
 
-    const dayNum = dayIndexFromStartSkippingWeekends(start, new Date());
-    const item = PLAN.find(p => Number(p.day) === Number(dayNum));
+/* ----- 전역 에러를 화면에 표시 ----- */
+window.addEventListener("error", (e)=>{
+  showError(`스크립트 오류가 발생했습니다.\n\n${e?.message || e}\n\n(필요하시면 이 메시지를 그대로 보내주세요)`);
+});
+window.addEventListener("unhandledrejection", (e)=>{
+  showError(`처리되지 않은 오류가 발생했습니다.\n\n${e?.reason?.message || e?.reason || e}\n\n(필요하시면 이 메시지를 그대로 보내주세요)`);
+});
 
-    if (!item){
-      box.textContent = (dayNum>PLAN.length) ? "오늘 분량: 완료!" : `오늘 분량: Day ${dayNum}`;
-      return;
-    }
-    const dateStr = DAY_TO_DATE_STR[dayNum] ? ` · ${DAY_TO_DATE_STR[dayNum]}` : "";
-    const title = (item.type==="buffer") ? "따라잡기/복습" : readingTitleKo(item);
-    box.textContent = `오늘 분량: Day ${dayNum}${dateStr} · ${title}`;
+async function init(){
+  try{
+    // load checks
+    try { CHECKS = JSON.parse(localStorage.getItem(STORAGE_CHECKS) || "{}") || {}; }
+    catch { CHECKS = {}; }
+
+    // restore start date to input
+    const savedStart = localStorage.getItem(STORAGE_START);
+    if(savedStart) document.getElementById("startDate").value = savedStart;
+
+    // load plan.json (이건 이미 사용자께서 직접 열리니 OK지만, 그래도 방어)
+    const res = await fetch("plan.json", { cache: "no-store" });
+    if(!res.ok) throw new Error(`plan.json 로드 실패: HTTP ${res.status}`);
+    const data = await res.json();
+    if(!data || !Array.isArray(data.plan)) throw new Error(`plan.json 형식 오류: { "plan": [...] } 형태가 아닙니다.`);
+    PLAN = data.plan;
+
+    rebuildMaps();
+    updateStats();
+    updateTodayBox();
+    render();
+    maybeCelebrateMonthlyCompletion();
+    clearMsg();
+
+    // 필요하면 아래 줄 주석 해제해서 상태 메시지 표시 가능
+    // showOK(`정상 로드 ✅ (Day ${PLAN.length} / 날짜맵 ${Object.keys(DAY_TO_DATE_STR).length})`);
+  } catch(err){
+    showError(`데이터를 표시하지 못했습니다.\n\n[원인]\n${err?.message || err}`);
   }
 
-  function scrollToDay(dayNum){
-    const el = document.getElementById(`day-${dayNum}`);
-    if (el) el.scrollIntoView({behavior:"smooth", block:"start"});
+  // service worker는 존재하면 등록만 (문제 원인과 무관)
+  if("serviceWorker" in navigator){
+    try { navigator.serviceWorker.register("./sw.js"); } catch {}
   }
+}
 
-  // ---- Stats
-  function updateStats(){
-    const total = PLAN.length;
-    const done = Object.values(CHECKS).filter(Boolean).length;
-    const pct = total ? Math.round(done/total*100) : 0;
-    document.getElementById("progressAll").textContent = `전체: ${done}/${total} (${pct}%)`;
+/* ----- 이벤트 ----- */
+document.getElementById("startDate").addEventListener("change",(e)=>{
+  const v = (e.target.value||"").trim();
+  if(!v) return;
+  localStorage.setItem(STORAGE_START, v);
+  rebuildMaps();
+  updateTodayBox();
+  render();
+  maybeCelebrateMonthlyCompletion();
+});
 
-    let otT=0,otD=0,ntT=0,ntD=0;
-    for (const item of PLAN){
-      if (item.type!=="read" || !item.readings?.length) continue;
-      const first = item.reading
+document.getElementById("viewMode").addEventListener("change",(e)=>{
+  VIEW_MODE = e.target.value;
+  render();
+});
+
+document.getElementById("q").addEventListener("input",(e)=>{
+  FILTER = (e.target.value||"").trim();
+  render();
+});
+
+document.getElementById("clearSearch").addEventListener("click",()=>{
+  FILTER = "";
+  document.getElementById("q").value = "";
+  render();
+});
+
+document.getElementById("goTodayBtn").addEventListener("click",()=>{
+  const startStr = localStorage.getItem(STORAGE_START) || document.getElementById("startDate").value;
+  if(!startStr){ alert("먼저 시작일을 설정해 주세요."); return; }
+
+  // 오늘이 필터/검색으로 가려졌을 수 있으니 해제 후 스크롤
+  VIEW_MODE = "all";
+  document.getElementById("viewMode").value = "all";
+  FILTER = "";
+  document.getElementById("q").value = "";
+
+  rebuildMaps();
+  updateTodayBox();
+  render();
+
+  const dayNum = dayIndexFromStartSkippingWeekends(startStr, new Date());
+  setTimeout(()=>scrollToDay(dayNum), 0);
+});
+
+document.getElementById("exportBtn").addEventListener("click", exportBackup);
+
+document.getElementById("importFile").addEventListener("change", async (e)=>{
+  const file = e.target.files?.[0];
+  if(!file) return;
+  try { await importBackup(file); alert("복원 완료"); }
+  catch { alert("백업 파일이 올바르지 않습니다."); }
+  finally { e.target.value = ""; }
+});
+
+document.getElementById("resetBtn").addEventListener("click", ()=>{
+  if(!confirm("정말 초기화하시겠습니까?")) return;
+  CHECKS = {};
+  localStorage.setItem(STORAGE_CHECKS, JSON.stringify(CHECKS));
+  updateStats();
+  updateTodayBox();
+  render();
+});
+
+document.getElementById("celebrateClose").addEventListener("click", ()=>{
+  document.getElementById("overlay").style.display = "none";
+});
+document.getElementById("overlay").addEventListener("click",(e)=>{
+  if(e.target.id === "overlay") e.target.style.display = "none";
+});
+
+init();
+</script>
+</body>
+</html>
