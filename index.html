@@ -11,169 +11,30 @@
   <title>성경 통독 (평일 1년)</title>
 
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
-      margin: 0; background: #ffffff; color: #0f172a;
-    }
-    header {
-      position: sticky; top: 0; z-index: 10;
-      background: #fff; padding: 14px 16px; border-bottom: 1px solid #eee;
-    }
-    h1 { margin: 0; font-size: 18px; }
-    .sub { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    .pill { background: #f1f5f9; padding: 6px 10px; border-radius: 999px; font-size: 13px; color: #334155; }
-    .btn {
-      border: 1px solid #e2e8f0; background: #fff;
-      padding: 7px 10px; border-radius: 10px; cursor: pointer;
-      font-size: 13px; color: #0f172a;
-    }
-    .btn:active { transform: scale(0.99); }
-    .btnDanger { border-color: #fecaca; }
-    .btnPrimary { border-color: #cbd5e1; background: #0f172a; color: #fff; }
-    .search { width: 100%; margin-top: 10px; display: flex; gap: 8px; }
-    input[type="text"] {
-      flex: 1; padding: 10px 12px; border: 1px solid #e2e8f0;
-      border-radius: 12px; font-size: 14px;
-    }
-    input[type="date"] {
-      padding: 8px 10px; border: 1px solid #e2e8f0;
-      border-radius: 10px; font-size: 13px;
-    }
-    select {
-      padding: 8px 10px; border: 1px solid #e2e8f0;
-      border-radius: 10px; font-size: 13px; background: #fff;
-    }
-    main { padding: 8px 0 60px; }
-    .row {
-      display: flex; gap: 12px; padding: 14px 16px;
-      border-bottom: 1px solid #f1f5f9; align-items: center;
-    }
-    .row.done { background: #f6fff6; }
-    .day {
-      width: 92px; font-weight: 900; font-size: 13px;
-      white-space: pre-line;
-    }
-    .title { flex: 1; }
-    .title .t1 { font-size: 14px; font-weight: 900; }
-    .title .t2 { margin-top: 5px; font-size: 12px; color: #475569; line-height: 1.35; }
-    .check { font-size: 20px; }
+    body { font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",Arial,sans-serif; margin:0; background:#fff; color:#0f172a; }
+    header{ position:sticky; top:0; z-index:10; background:#fff; padding:14px 16px; border-bottom:1px solid #eee; }
+    h1{ margin:0; font-size:18px; }
+    .sub{ margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    .pill{ background:#f1f5f9; padding:6px 10px; border-radius:999px; font-size:13px; color:#334155; }
+    .btn{ border:1px solid #e2e8f0; background:#fff; padding:7px 10px; border-radius:10px; cursor:pointer; font-size:13px; color:#0f172a; }
+    .btnPrimary{ background:#0f172a; color:#fff; }
+    .btnDanger{ border-color:#fecaca; }
+    input[type="text"]{ flex:1; padding:10px 12px; border:1px solid #e2e8f0; border-radius:12px; font-size:14px; }
+    input[type="date"], select{ padding:8px 10px; border:1px solid #e2e8f0; border-radius:10px; font-size:13px; background:#fff; }
+    .search{ width:100%; margin-top:10px; display:flex; gap:8px; }
+    main{ padding:8px 0 60px; }
+    .row{ display:flex; gap:12px; padding:14px 16px; border-bottom:1px solid #f1f5f9; align-items:center; }
+    .row.done{ background:#f6fff6; }
+    .day{ width:92px; font-weight:900; font-size:13px; white-space:pre-line; }
+    .title{ flex:1; }
+    .t1{ font-size:14px; font-weight:900; }
+    .t2{ margin-top:5px; font-size:12px; color:#475569; line-height:1.35; }
+    .check{ font-size:20px; }
+    .hint{ margin-top:8px; font-size:12px; color:#64748b; }
 
     /* 축하 모달 */
-    .overlay {
-      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45);
-      display: none; align-items: center; justify-content: center; padding: 18px;
-      z-index: 999;
-    }
-    .modal {
-      width: min(420px, 100%);
-      background: #fff; border-radius: 18px; padding: 16px 16px 14px;
-      box-shadow: 0 18px 60px rgba(0,0,0,0.2);
-    }
-    .modal h2 { margin: 0; font-size: 18px; }
-    .modal p { margin: 10px 0 0; font-size: 13px; color: #334155; line-height: 1.45; }
-    .modal .actions { margin-top: 14px; display: flex; justify-content: flex-end; }
-  </style>
-</head>
-
-<body>
-  <header>
-    <h1>성경 통독 (평일 1년)</h1>
-
-    <div class="sub">
-      <span class="pill" id="todayBox">오늘 분량: -</span>
-      <button class="btn btnPrimary" id="goTodayBtn">오늘 이동</button>
-      <span class="pill" id="progressAll">전체: -</span>
-      <span class="pill" id="progressOT">구약: -</span>
-      <span class="pill" id="progressNT">신약: -</span>
-    </div>
-
-    <div class="sub">
-      <label class="btn">
-        시작일
-        <input id="startDate" type="date" />
-      </label>
-
-      <select id="viewMode">
-        <option value="all">전체 보기</option>
-        <option value="todo">미완료만</option>
-        <option value="done">완료만</option>
-      </select>
-
-      <button class="btn" id="exportBtn">백업 내보내기</button>
-
-      <label class="btn">
-        백업 가져오기
-        <input id="importFile" type="file" accept="application/json" style="display:none" />
-      </label>
-
-      <button class="btn btnDanger" id="resetBtn">전체 체크 초기화</button>
-    </div>
-
-    <div class="search">
-      <input id="q" type="text" placeholder="검색: 창세기, 요한복음, Day 120, 1/1/26" />
-      <button class="btn" id="clearSearch">지우기</button>
-    </div>
-  </header>
-
-  <main id="list"></main>
-
-  <!-- 축하 모달 -->
-  <div class="overlay" id="overlay">
-    <div class="modal" role="dialog" aria-modal="true">
-      <h2 id="celebrateTitle">🎉 한 달 완료!</h2>
-      <p id="celebrateBody">이번 달 읽기 플랜을 모두 완료하셨어요. 계속 이어가 보세요!</p>
-      <div class="actions">
-        <button class="btn btnPrimary" id="celebrateClose">확인</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // ---- Storage Keys
-    const STORAGE_CHECKS = "bible_reading_checks_v4";
-    const STORAGE_START  = "bible_start_date_v4";
-    const STORAGE_CELEB  = "bible_month_celebrated_v4"; // { "2026-01": true, ... }
-
-    // ---- State
-    let PLAN = [];
-    let CHECKS = {};
-    let FILTER = "";
-    let VIEW_MODE = "all";
-
-    // Day -> Date label
-    let DAY_TO_DATE_STR = {};   // { 1: "1/1/26", ... }
-    let MONTH_TO_DAYS = {};     // { "2026-01": [day, ...], ... }
-
-    // ---- NT books (OT/NT progress)
-    const NT_BOOKS = new Set([
-      "Matthew","Mark","Luke","John","Acts","Romans",
-      "1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians",
-      "1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon",
-      "Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"
-    ]);
-
-    // ---- Korean book names
-    const BOOK_KO = {
-      "Genesis":"창세기","Exodus":"출애굽기","Leviticus":"레위기","Numbers":"민수기","Deuteronomy":"신명기",
-      "Joshua":"여호수아","Judges":"사사기","Ruth":"룻기","1 Samuel":"사무엘상","2 Samuel":"사무엘하",
-      "1 Kings":"열왕기상","2 Kings":"열왕기하","1 Chronicles":"역대상","2 Chronicles":"역대하",
-      "Ezra":"에스라","Nehemiah":"느헤미야","Esther":"에스더","Job":"욥기","Psalms":"시편",
-      "Proverbs":"잠언","Ecclesiastes":"전도서","Song of Solomon":"아가","Isaiah":"이사야",
-      "Jeremiah":"예레미야","Lamentations":"예레미야애가","Ezekiel":"에스겔","Daniel":"다니엘",
-      "Hosea":"호세아","Joel":"요엘","Amos":"아모스","Obadiah":"오바댜","Jonah":"요나",
-      "Micah":"미가","Nahum":"나훔","Habakkuk":"하박국","Zephaniah":"스바냐","Haggai":"학개",
-      "Zechariah":"스가랴","Malachi":"말라기",
-      "Matthew":"마태복음","Mark":"마가복음","Luke":"누가복음","John":"요한복음","Acts":"사도행전",
-      "Romans":"로마서","1 Corinthians":"고린도전서","2 Corinthians":"고린도후서","Galatians":"갈라디아서",
-      "Ephesians":"에베소서","Philippians":"빌레립보서","Colossians":"골로새서",
-      "1 Thessalonians":"데살로니가전서","2 Thessalonians":"데살로니가후서",
-      "1 Timothy":"디모데전서","2 Timothy":"디모데후서","Titus":"디도서","Philemon":"빌레몬서",
-      "Hebrews":"히브리서","James":"야고보서","1 Peter":"베드로전서","2 Peter":"베드로후서",
-      "1 John":"요한일서","2 John":"요한이서","3 John":"요한삼서","Jude":"유다서","Revelation":"요한계시록"
-    };
-
-    function bookName(en) { return BOOK_KO[en] || en; }
-    function isNT(bookEn) { return NT_BOOKS.has(bookEn); }
-
-    // ---- Dates
-    function toDateOnly(d){ return new Date(d.getFullYear(), d.getMonth(), d.g
+    .overlay{ position:fixed; inset:0; background:rgba(15,23,42,0.45); display:none; align-items:center; justify-content:center; padding:18px; z-index:999; }
+    .modal{ width:min(420px,100%); background:#fff; border-radius:18px; padding:16px 16px 14px; box-shadow:0 18px 60px rgba(0,0,0,0.2); }
+    .modal h2{ margin:0; font-size:18px; }
+    .modal p{ margin:10px 0 0; font-size:13px; color:#334155; line-height:1.45; }
+    .modal .actions{ margin-top:1
