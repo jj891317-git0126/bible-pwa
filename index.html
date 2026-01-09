@@ -11,30 +11,559 @@
   <title>성경 통독 (평일 1년)</title>
 
   <style>
-    body { font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",Arial,sans-serif; margin:0; background:#fff; color:#0f172a; }
-    header{ position:sticky; top:0; z-index:10; background:#fff; padding:14px 16px; border-bottom:1px solid #eee; }
-    h1{ margin:0; font-size:18px; }
-    .sub{ margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-    .pill{ background:#f1f5f9; padding:6px 10px; border-radius:999px; font-size:13px; color:#334155; }
-    .btn{ border:1px solid #e2e8f0; background:#fff; padding:7px 10px; border-radius:10px; cursor:pointer; font-size:13px; color:#0f172a; }
-    .btnPrimary{ background:#0f172a; color:#fff; }
-    .btnDanger{ border-color:#fecaca; }
-    input[type="text"]{ flex:1; padding:10px 12px; border:1px solid #e2e8f0; border-radius:12px; font-size:14px; }
-    input[type="date"], select{ padding:8px 10px; border:1px solid #e2e8f0; border-radius:10px; font-size:13px; background:#fff; }
-    .search{ width:100%; margin-top:10px; display:flex; gap:8px; }
-    main{ padding:8px 0 60px; }
-    .row{ display:flex; gap:12px; padding:14px 16px; border-bottom:1px solid #f1f5f9; align-items:center; }
-    .row.done{ background:#f6fff6; }
-    .day{ width:92px; font-weight:900; font-size:13px; white-space:pre-line; }
-    .title{ flex:1; }
-    .t1{ font-size:14px; font-weight:900; }
-    .t2{ margin-top:5px; font-size:12px; color:#475569; line-height:1.35; }
-    .check{ font-size:20px; }
-    .hint{ margin-top:8px; font-size:12px; color:#64748b; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
+      margin: 0; background: #ffffff; color: #0f172a;
+    }
+    header {
+      position: sticky; top: 0; z-index: 10;
+      background: #fff; padding: 14px 16px; border-bottom: 1px solid #eee;
+    }
+    h1 { margin: 0; font-size: 18px; }
+    .sub { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .pill { background: #f1f5f9; padding: 6px 10px; border-radius: 999px; font-size: 13px; color: #334155; }
+    .btn {
+      border: 1px solid #e2e8f0; background: #fff;
+      padding: 7px 10px; border-radius: 10px; cursor: pointer;
+      font-size: 13px; color: #0f172a;
+    }
+    .btn:active { transform: scale(0.99); }
+    .btnDanger { border-color: #fecaca; }
+    .btnPrimary { border-color: #cbd5e1; background: #0f172a; color: #fff; }
+    .search { width: 100%; margin-top: 10px; display: flex; gap: 8px; }
+    input[type="text"] {
+      flex: 1; padding: 10px 12px; border: 1px solid #e2e8f0;
+      border-radius: 12px; font-size: 14px;
+    }
+    input[type="date"] {
+      padding: 8px 10px; border: 1px solid #e2e8f0;
+      border-radius: 10px; font-size: 13px;
+    }
+    select {
+      padding: 8px 10px; border: 1px solid #e2e8f0;
+      border-radius: 10px; font-size: 13px; background: #fff;
+    }
+    main { padding: 8px 0 60px; }
+    .row {
+      display: flex; gap: 12px; padding: 14px 16px;
+      border-bottom: 1px solid #f1f5f9; align-items: center;
+    }
+    .row.done { background: #f6fff6; }
+    .day {
+      width: 92px; font-weight: 900; font-size: 13px;
+      white-space: pre-line;
+    }
+    .title { flex: 1; }
+    .title .t1 { font-size: 14px; font-weight: 900; }
+    .title .t2 { margin-top: 5px; font-size: 12px; color: #475569; line-height: 1.35; }
+    .check { font-size: 20px; }
 
     /* 축하 모달 */
-    .overlay{ position:fixed; inset:0; background:rgba(15,23,42,0.45); display:none; align-items:center; justify-content:center; padding:18px; z-index:999; }
-    .modal{ width:min(420px,100%); background:#fff; border-radius:18px; padding:16px 16px 14px; box-shadow:0 18px 60px rgba(0,0,0,0.2); }
-    .modal h2{ margin:0; font-size:18px; }
-    .modal p{ margin:10px 0 0; font-size:13px; color:#334155; line-height:1.45; }
-    .modal .actions{ margin-top:1
+    .overlay {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45);
+      display: none; align-items: center; justify-content: center; padding: 18px;
+      z-index: 999;
+    }
+    .modal {
+      width: min(420px, 100%);
+      background: #fff; border-radius: 18px; padding: 16px 16px 14px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.2);
+    }
+    .modal h2 { margin: 0; font-size: 18px; }
+    .modal p { margin: 10px 0 0; font-size: 13px; color: #334155; line-height: 1.45; }
+    .modal .actions { margin-top: 14px; display: flex; justify-content: flex-end; }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>성경 통독 (평일 1년)</h1>
+
+    <div class="sub">
+      <span class="pill" id="todayBox">오늘 분량: -</span>
+      <button class="btn btnPrimary" id="goTodayBtn">오늘 이동</button>
+      <span class="pill" id="progressAll">전체: -</span>
+      <span class="pill" id="progressOT">구약: -</span>
+      <span class="pill" id="progressNT">신약: -</span>
+    </div>
+
+    <div class="sub">
+      <label class="btn">
+        시작일
+        <input id="startDate" type="date" />
+      </label>
+
+      <select id="viewMode">
+        <option value="all">전체 보기</option>
+        <option value="todo">미완료만</option>
+        <option value="done">완료만</option>
+      </select>
+
+      <button class="btn" id="exportBtn">백업 내보내기</button>
+
+      <label class="btn">
+        백업 가져오기
+        <input id="importFile" type="file" accept="application/json" style="display:none" />
+      </label>
+
+      <button class="btn btnDanger" id="resetBtn">전체 체크 초기화</button>
+    </div>
+
+    <div class="search">
+      <input id="q" type="text" placeholder="검색: 창세기, 요한복음, Day 120, 1/1/26" />
+      <button class="btn" id="clearSearch">지우기</button>
+    </div>
+  </header>
+
+  <main id="list"></main>
+
+  <!-- 축하 모달 -->
+  <div class="overlay" id="overlay">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h2 id="celebrateTitle">🎉 한 달 완료!</h2>
+      <p id="celebrateBody">이번 달 읽기 플랜을 모두 완료하셨어요. 계속 이어가 보세요!</p>
+      <div class="actions">
+        <button class="btn btnPrimary" id="celebrateClose">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---- Storage Keys
+    const STORAGE_CHECKS = "bible_reading_checks_v4";
+    const STORAGE_START  = "bible_start_date_v4";
+    const STORAGE_CELEB  = "bible_month_celebrated_v4"; // { "2026-01": true, ... }
+
+    // ---- State
+    let PLAN = [];
+    let CHECKS = {};
+    let FILTER = "";
+    let VIEW_MODE = "all";
+
+    // Day -> Date label
+    let DAY_TO_DATE_STR = {};   // { 1: "1/1/26", ... }
+    let MONTH_TO_DAYS = {};     // { "2026-01": [day, ...], ... }
+
+    // ---- NT books (OT/NT progress)
+    const NT_BOOKS = new Set([
+      "Matthew","Mark","Luke","John","Acts","Romans",
+      "1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians",
+      "1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon",
+      "Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"
+    ]);
+
+    // ---- Korean book names
+    const BOOK_KO = {
+      "Genesis":"창세기","Exodus":"출애굽기","Leviticus":"레위기","Numbers":"민수기","Deuteronomy":"신명기",
+      "Joshua":"여호수아","Judges":"사사기","Ruth":"룻기","1 Samuel":"사무엘상","2 Samuel":"사무엘하",
+      "1 Kings":"열왕기상","2 Kings":"열왕기하","1 Chronicles":"역대상","2 Chronicles":"역대하",
+      "Ezra":"에스라","Nehemiah":"느헤미야","Esther":"에스더","Job":"욥기","Psalms":"시편",
+      "Proverbs":"잠언","Ecclesiastes":"전도서","Song of Solomon":"아가","Isaiah":"이사야",
+      "Jeremiah":"예레미야","Lamentations":"예레미야애가","Ezekiel":"에스겔","Daniel":"다니엘",
+      "Hosea":"호세아","Joel":"요엘","Amos":"아모스","Obadiah":"오바댜","Jonah":"요나",
+      "Micah":"미가","Nahum":"나훔","Habakkuk":"하박국","Zephaniah":"스바냐","Haggai":"학개",
+      "Zechariah":"스가랴","Malachi":"말라기",
+      "Matthew":"마태복음","Mark":"마가복음","Luke":"누가복음","John":"요한복음","Acts":"사도행전",
+      "Romans":"로마서","1 Corinthians":"고린도전서","2 Corinthians":"고린도후서","Galatians":"갈라디아서",
+      "Ephesians":"에베소서","Philippians":"빌레립보서","Colossians":"골로새서",
+      "1 Thessalonians":"데살로니가전서","2 Thessalonians":"데살로니가후서",
+      "1 Timothy":"디모데전서","2 Timothy":"디모데후서","Titus":"디도서","Philemon":"빌레몬서",
+      "Hebrews":"히브리서","James":"야고보서","1 Peter":"베드로전서","2 Peter":"베드로후서",
+      "1 John":"요한일서","2 John":"요한이서","3 John":"요한삼서","Jude":"유다서","Revelation":"요한계시록"
+    };
+
+    function bookName(en) { return BOOK_KO[en] || en; }
+    function isNT(bookEn) { return NT_BOOKS.has(bookEn); }
+
+    // ---- Dates
+    function toDateOnly(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+    function isWeekend(d){ const x=d.getDay(); return x===0 || x===6; }
+
+    // 1/1/26 형태
+    function fmtMDYY(d){
+      const mm = d.getMonth()+1;
+      const dd = d.getDate();
+      const yy = String(d.getFullYear()).slice(-2);
+      return `${mm}/${dd}/${yy}`;
+    }
+    function monthKey(d){
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,"0");
+      return `${y}-${m}`;
+    }
+    function monthLabelKo(key){
+      const [y,m] = key.split("-");
+      return `${y}년 ${parseInt(m,10)}월`;
+    }
+
+    // ---- Load/Save
+    function loadChecks() {
+      try { CHECKS = JSON.parse(localStorage.getItem(STORAGE_CHECKS) || "{}") || {}; }
+      catch { CHECKS = {}; }
+    }
+    function saveChecks() {
+      localStorage.setItem(STORAGE_CHECKS, JSON.stringify(CHECKS));
+      updateStats();
+      updateTodayBox();
+      maybeCelebrateMonthlyCompletion();
+    }
+
+    function readingTitleKo(item){
+      let t = item.title || "";
+      for (const [en, ko] of Object.entries(BOOK_KO)) {
+        t = t.split(en).join(ko);
+      }
+      return t;
+    }
+    function readingDetailKo(item){
+      if (item.type !== "read") return "밀린 분량을 따라잡거나, 복습/묵상용으로 사용하세요.";
+      return item.readings.map(r => `${bookName(r.book)} ${r.chapter}장`).join(", ");
+    }
+
+    function matchesFilter(item) {
+      if (VIEW_MODE === "done" && !CHECKS[item.day]) return false;
+      if (VIEW_MODE === "todo" && !!CHECKS[item.day]) return false;
+
+      if (!FILTER) return true;
+      const f = FILTER.toLowerCase();
+      const hay = [
+        `day ${item.day}`,
+        readingTitleKo(item),
+        readingDetailKo(item),
+        (DAY_TO_DATE_STR[item.day] || "")
+      ].join(" ").toLowerCase();
+      return hay.includes(f);
+    }
+
+    // ---- Build Day->Date maps (weekdays only)
+    function rebuildMapsIfPossible(){
+      DAY_TO_DATE_STR = {};
+      MONTH_TO_DAYS = {};
+
+      const startDateStr = (localStorage.getItem(STORAGE_START) || document.getElementById("startDate").value || "").trim();
+      if (!startDateStr) return;
+
+      let d = toDateOnly(new Date(startDateStr));
+      while (isWeekend(d)) d.setDate(d.getDate() + 1);
+
+      for (let day = 1; day <= PLAN.length; day++){
+        while (isWeekend(d)) d.setDate(d.getDate() + 1);
+
+        const label = fmtMDYY(d);
+        DAY_TO_DATE_STR[day] = label;
+
+        const mk = monthKey(d);
+        if (!MONTH_TO_DAYS[mk]) MONTH_TO_DAYS[mk] = [];
+        MONTH_TO_DAYS[mk].push(day);
+
+        d.setDate(d.getDate() + 1);
+      }
+    }
+
+    // ---- Today day index and scroll
+    function dayIndexFromStartSkippingWeekends(startDateStr, todayDate){
+      let d = toDateOnly(new Date(startDateStr));
+      let t = toDateOnly(new Date(todayDate));
+
+      while (isWeekend(d)) d.setDate(d.getDate() + 1);
+
+      let count = 0;
+      while (d <= t) {
+        if (!isWeekend(d)) count++;
+        d.setDate(d.getDate() + 1);
+      }
+      return count;
+    }
+
+    function updateTodayBox(){
+      const box = document.getElementById("todayBox");
+      const start = localStorage.getItem(STORAGE_START) || document.getElementById("startDate").value;
+
+      if (!start) {
+        box.textContent = "오늘 분량: 시작일을 설정하세요";
+        return;
+      }
+
+      const dayNum = dayIndexFromStartSkippingWeekends(start, new Date());
+      const item = PLAN.find(p => Number(p.day) === Number(dayNum));
+
+      if (!item) {
+        if (dayNum > PLAN.length) box.textContent = "오늘 분량: 완료!";
+        else box.textContent = `오늘 분량: Day ${dayNum}`;
+        return;
+      }
+
+      const title = (item.type === "buffer") ? "따라잡기/복습" : readingTitleKo(item);
+      const dateStr = DAY_TO_DATE_STR[dayNum] ? ` · ${DAY_TO_DATE_STR[dayNum]}` : "";
+      box.textContent = `오늘 분량: Day ${dayNum}${dateStr} · ${title}`;
+    }
+
+    function scrollToDay(dayNum){
+      const el = document.getElementById(`day-${dayNum}`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // ---- Stats
+    function updateStats() {
+      const total = PLAN.length;
+      const done = Object.values(CHECKS).filter(Boolean).length;
+      const pct = total ? Math.round((done/total)*100) : 0;
+      document.getElementById("progressAll").textContent = `전체: ${done}/${total} (${pct}%)`;
+
+      let otTotal=0, otDone=0, ntTotal=0, ntDone=0;
+      for (const item of PLAN) {
+        if (item.type !== "read" || !item.readings || item.readings.length===0) continue;
+        const firstBook = item.readings[0].book;
+        const doneThis = !!CHECKS[item.day];
+        if (isNT(firstBook)) {
+          ntTotal++; if (doneThis) ntDone++;
+        } else {
+          otTotal++; if (doneThis) otDone++;
+        }
+      }
+      const otPct = otTotal ? Math.round((otDone/otTotal)*100) : 0;
+      const ntPct = ntTotal ? Math.round((ntDone/ntTotal)*100) : 0;
+
+      document.getElementById("progressOT").textContent = `구약: ${otDone}/${otTotal} (${otPct}%)`;
+      document.getElementById("progressNT").textContent = `신약: ${ntDone}/${ntTotal} (${ntPct}%)`;
+    }
+
+    // ---- Monthly celebration
+    function getCelebratedMap(){
+      try { return JSON.parse(localStorage.getItem(STORAGE_CELEB) || "{}") || {}; }
+      catch { return {}; }
+    }
+    function setCelebratedMap(obj){
+      localStorage.setItem(STORAGE_CELEB, JSON.stringify(obj));
+    }
+    function showCelebrate(monthKeyStr){
+      const overlay = document.getElementById("overlay");
+      document.getElementById("celebrateTitle").textContent = `🎉 ${monthLabelKo(monthKeyStr)} 완료!`;
+      document.getElementById("celebrateBody").textContent =
+        "이번 달에 해당하는 Day를 모두 체크하셨어요. 정말 잘하셨습니다! 다음 달도 힘내세요.";
+      overlay.style.display = "flex";
+    }
+
+    function maybeCelebrateMonthlyCompletion(){
+      if (!Object.keys(MONTH_TO_DAYS).length) return;
+
+      const celebrated = getCelebratedMap();
+      for (const mk of Object.keys(MONTH_TO_DAYS)) {
+        if (celebrated[mk]) continue;
+
+        const days = MONTH_TO_DAYS[mk] || [];
+        if (days.length === 0) continue;
+
+        const allDone = days.every(d => !!CHECKS[d]);
+        if (allDone) {
+          celebrated[mk] = true;
+          setCelebratedMap(celebrated);
+          showCelebrate(mk);
+          break; // 한 번에 하나만
+        }
+      }
+    }
+
+    // ---- Render
+    function render() {
+      const root = document.getElementById("list");
+      root.innerHTML = "";
+
+      const frag = document.createDocumentFragment();
+
+      for (const item of PLAN) {
+        const dayNum = Number(item.day);
+        if (!matchesFilter(item)) continue;
+
+        const isDone = !!CHECKS[dayNum];
+
+        const row = document.createElement("div");
+        row.className = "row" + (isDone ? " done" : "");
+        row.id = `day-${dayNum}`;
+
+        row.addEventListener("click", () => {
+          CHECKS[dayNum] = !CHECKS[dayNum];
+          saveChecks();
+          render();
+        });
+
+        const day = document.createElement("div");
+        day.className = "day";
+        const dateStr = DAY_TO_DATE_STR[dayNum] ? `\n${DAY_TO_DATE_STR[dayNum]}` : "";
+        day.textContent = `Day ${dayNum}${dateStr}`;
+
+        const title = document.createElement("div");
+        title.className = "title";
+
+        const t1 = document.createElement("div");
+        t1.className = "t1";
+        t1.textContent = item.type === "buffer" ? "따라잡기/복습" : readingTitleKo(item);
+
+        const t2 = document.createElement("div");
+        t2.className = "t2";
+        t2.textContent = readingDetailKo(item);
+
+        const check = document.createElement("div");
+        check.className = "check";
+        check.textContent = isDone ? "✅" : "⬜️";
+
+        title.appendChild(t1);
+        title.appendChild(t2);
+
+        row.appendChild(day);
+        row.appendChild(title);
+        row.appendChild(check);
+
+        frag.appendChild(row);
+      }
+
+      root.appendChild(frag);
+    }
+
+    // ---- Backup
+    function exportBackup(){
+      const payload = {
+        savedAt: new Date().toISOString(),
+        checks: CHECKS,
+        startDate: localStorage.getItem(STORAGE_START) || document.getElementById("startDate").value || null,
+        celebratedMonths: getCelebratedMap()
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "bible-check-backup.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    async function importBackup(file){
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      if (!parsed || typeof parsed !== "object" || !parsed.checks) throw new Error("형식 오류");
+
+      CHECKS = parsed.checks || {};
+      localStorage.setItem(STORAGE_CHECKS, JSON.stringify(CHECKS));
+
+      if (parsed.startDate) {
+        localStorage.setItem(STORAGE_START, parsed.startDate);
+        document.getElementById("startDate").value = parsed.startDate;
+      }
+      if (parsed.celebratedMonths) {
+        localStorage.setItem(STORAGE_CELEB, JSON.stringify(parsed.celebratedMonths));
+      }
+
+      rebuildMapsIfPossible();
+      updateStats();
+      updateTodayBox();
+      render();
+      maybeCelebrateMonthlyCompletion();
+    }
+
+    // ---- Init
+    async function init(){
+      loadChecks();
+
+      const res = await fetch("./plan.json", { cache: "no-store" });
+      const data = await res.json();
+      PLAN = data.plan || [];
+
+      // restore start date to input
+      const savedStart = localStorage.getItem(STORAGE_START);
+      if (savedStart) document.getElementById("startDate").value = savedStart;
+
+      // Always rebuild maps if start date exists
+      rebuildMapsIfPossible();
+
+      updateStats();
+      updateTodayBox();
+      render();
+      maybeCelebrateMonthlyCompletion();
+
+      if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js");
+    }
+
+    // ---- Events
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if (!confirm("정말 전체 체크를 초기화하시겠습니까?")) return;
+      CHECKS = {};
+      localStorage.setItem(STORAGE_CHECKS, JSON.stringify(CHECKS));
+      updateStats();
+      updateTodayBox();
+      render();
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", exportBackup);
+
+    document.getElementById("importFile").addEventListener("change", async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      try {
+        await importBackup(file);
+        alert("백업 가져오기가 완료되었습니다.");
+      } catch {
+        alert("백업 파일 형식이 올바르지 않습니다.");
+      } finally {
+        e.target.value = "";
+      }
+    });
+
+    document.getElementById("startDate").addEventListener("change", (e) => {
+      const v = (e.target.value || "").trim();
+      if (!v) return;
+
+      localStorage.setItem(STORAGE_START, v);
+      rebuildMapsIfPossible();
+      updateStats();
+      updateTodayBox();
+      render();
+      maybeCelebrateMonthlyCompletion();
+    });
+
+    document.getElementById("viewMode").addEventListener("change", (e) => {
+      VIEW_MODE = e.target.value;
+      render();
+    });
+
+    document.getElementById("q").addEventListener("input", (e) => {
+      FILTER = (e.target.value || "").trim();
+      render();
+    });
+
+    document.getElementById("clearSearch").addEventListener("click", () => {
+      FILTER = "";
+      document.getElementById("q").value = "";
+      render();
+    });
+
+    document.getElementById("goTodayBtn").addEventListener("click", () => {
+      const start = localStorage.getItem(STORAGE_START) || document.getElementById("startDate").value;
+      if (!start) { alert("먼저 시작일을 설정해 주세요."); return; }
+
+      // 오늘 Day가 검색/필터로 가려져 있으면 자동으로 풀고 이동
+      VIEW_MODE = "all";
+      document.getElementById("viewMode").value = "all";
+      FILTER = "";
+      document.getElementById("q").value = "";
+
+      rebuildMapsIfPossible();
+      updateTodayBox();
+      render();
+
+      const dayNum = dayIndexFromStartSkippingWeekends(start, new Date());
+
+      // 렌더가 끝난 뒤 스크롤
+      setTimeout(() => scrollToDay(dayNum), 0);
+    });
+
+    // 축하 모달 닫기
+    document.getElementById("celebrateClose").addEventListener("click", () => {
+      document.getElementById("overlay").style.display = "none";
+    });
+    document.getElementById("overlay").addEventListener("click", (e) => {
+      if (e.target.id === "overlay") e.target.style.display = "none";
+    });
+
+    init();
+  </script>
+</body>
+</html>
