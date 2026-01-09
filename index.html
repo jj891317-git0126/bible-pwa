@@ -8,425 +8,248 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="apple-touch-icon" href="icon-192.png" />
-  <title>성경 통독 (평일 1년)</title>
+  <title>성경 통독 (평일 · 크리스마스 제외)</title>
 
   <style>
-    :root { color-scheme: light; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
-      margin: 0; background: #ffffff; color: #0f172a;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      margin: 0;
+      background: #ffffff;
+      color: #0f172a;
     }
     header {
-      position: sticky; top: 0; z-index: 10;
-      background: #fff; padding: 14px 16px; border-bottom: 1px solid #eee;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #fff;
+      padding: 14px 16px;
+      border-bottom: 1px solid #eee;
     }
     h1 { margin: 0; font-size: 18px; }
     .sub { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    .pill { background: #f1f5f9; padding: 6px 10px; border-radius: 999px; font-size: 13px; color: #334155; }
+    .pill {
+      background: #f1f5f9;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
     .btn {
-      border: 1px solid #e2e8f0; background: #fff;
-      padding: 7px 10px; border-radius: 10px; cursor: pointer;
-      font-size: 13px; color: #0f172a;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      padding: 7px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      cursor: pointer;
     }
-    .btn:active { transform: scale(0.99); }
-    .btnDanger { border-color: #fecaca; background: #fff; }
-    .btnPrimary { border-color: #cbd5e1; background: #0f172a; color: #fff; }
-    .search { width: 100%; margin-top: 10px; display: flex; gap: 8px; }
-    input[type="text"] {
-      flex: 1; padding: 10px 12px; border: 1px solid #e2e8f0;
-      border-radius: 12px; font-size: 14px;
+    .btnPrimary {
+      background: #0f172a;
+      color: #fff;
     }
-    input[type="date"] {
-      padding: 8px 10px; border: 1px solid #e2e8f0;
-      border-radius: 10px; font-size: 13px;
+    .btnDanger { border-color: #fecaca; }
+    input[type="date"], select, input[type="text"] {
+      padding: 8px 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 13px;
     }
-    select {
-      padding: 8px 10px; border: 1px solid #e2e8f0;
-      border-radius: 10px; font-size: 13px; background: #fff;
-    }
-    main { padding: 8px 0 40px; }
+    .search { margin-top: 10px; display: flex; gap: 8px; }
+    main { padding-bottom: 40px; }
     .row {
-      display: flex; gap: 12px; padding: 14px 16px;
-      border-bottom: 1px solid #f1f5f9; align-items: center;
+      display: flex;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      align-items: center;
     }
     .row.done { background: #f6fff6; }
-    .day { width: 70px; font-weight: 800; font-size: 14px; }
+    .day {
+      width: 95px;
+      font-weight: 800;
+      font-size: 13px;
+      white-space: pre-line;
+    }
     .title { flex: 1; }
-    .title .t1 { font-size: 14px; font-weight: 800; }
-    .title .t2 { margin-top: 5px; font-size: 12px; color: #475569; line-height: 1.35; }
+    .t1 { font-size: 14px; font-weight: 800; }
+    .t2 { margin-top: 4px; font-size: 12px; color: #475569; }
     .check { font-size: 20px; }
-    .hint { margin-top: 8px; font-size: 12px; color: #64748b; }
-    .muted { color: #64748b; }
   </style>
 </head>
 
 <body>
-  <header>
-    <h1>성경 통독 (평일 1년)</h1>
+<header>
+  <h1>성경 통독 (평일 · 크리스마스 제외)</h1>
 
-    <div class="sub">
-      <span class="pill" id="todayBox">오늘 분량: -</span>
-      <button class="btn btnPrimary" id="goTodayBtn">오늘로 이동</button>
-      <span class="pill" id="progressAll">전체: -</span>
-      <span class="pill" id="progressOT">구약: -</span>
-      <span class="pill" id="progressNT">신약: -</span>
-    </div>
+  <div class="sub">
+    <span class="pill" id="todayBox">오늘 분량: -</span>
+    <button class="btn btnPrimary" id="goTodayBtn">오늘로 이동</button>
+    <span class="pill" id="progressAll">전체: -</span>
+    <span class="pill" id="progressOT">구약: -</span>
+    <span class="pill" id="progressNT">신약: -</span>
+  </div>
 
-    <div class="sub">
-      <label class="btn">
-        시작일
-        <input id="startDate" type="date" />
-      </label>
+  <div class="sub">
+    시작일 <input type="date" id="startDate" />
+    <select id="viewMode">
+      <option value="all">전체</option>
+      <option value="todo">미완료</option>
+      <option value="done">완료</option>
+    </select>
+    <button class="btn" id="exportBtn">백업</button>
+    <label class="btn">
+      복원 <input type="file" id="importFile" accept="application/json" style="display:none">
+    </label>
+    <button class="btn btnDanger" id="resetBtn">초기화</button>
+  </div>
 
-      <select id="viewMode">
-        <option value="all">전체 보기</option>
-        <option value="todo">미완료만</option>
-        <option value="done">완료만</option>
-      </select>
+  <div class="search">
+    <input id="q" type="text" placeholder="검색: 창세기, 요한복음, Day 120">
+    <button class="btn" id="clearSearch">지우기</button>
+  </div>
+</header>
 
-      <button class="btn" id="exportBtn">백업 내보내기</button>
+<main id="list"></main>
 
-      <label class="btn">
-        백업 가져오기
-        <input id="importFile" type="file" accept="application/json" style="display:none" />
-      </label>
+<script>
+const STORAGE_CHECKS = "bible_checks_final";
+const STORAGE_START  = "bible_start_final";
 
-      <button class="btn btnDanger" id="resetBtn">전체 체크 초기화</button>
-    </div>
+let PLAN = [];
+let CHECKS = {};
+let DAY_TO_DATE = {};
+let FILTER = "";
+let VIEW_MODE = "all";
 
-    <div class="search">
-      <input id="q" type="text" placeholder="검색: 예) 창세기, 요한복음, Day 120, 마태복음 5" />
-      <button class="btn" id="clearSearch">지우기</button>
-    </div>
+const NT_BOOKS = new Set([
+  "Matthew","Mark","Luke","John","Acts","Romans","1 Corinthians","2 Corinthians",
+  "Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians",
+  "1 Timothy","2 Timothy","Titus","Philemon","Hebrews","James","1 Peter","2 Peter",
+  "1 John","2 John","3 John","Jude","Revelation"
+]);
 
-    <div class="hint">
-      아이폰 팁: Safari에서 “홈 화면에 추가”로 설치하면 앱처럼 사용됩니다.
-      <span class="muted">(체크 기록은 내 아이폰에만 저장됩니다)</span>
-    </div>
-  </header>
+const BOOK_KO = {
+  "Genesis":"창세기","Exodus":"출애굽기","Leviticus":"레위기","Numbers":"민수기","Deuteronomy":"신명기",
+  "Joshua":"여호수아","Judges":"사사기","Ruth":"룻기","1 Samuel":"사무엘상","2 Samuel":"사무엘하",
+  "1 Kings":"열왕기상","2 Kings":"열왕기하","1 Chronicles":"역대상","2 Chronicles":"역대하",
+  "Ezra":"에스라","Nehemiah":"느헤미야","Esther":"에스더","Job":"욥기","Psalms":"시편",
+  "Proverbs":"잠언","Ecclesiastes":"전도서","Song of Solomon":"아가","Isaiah":"이사야",
+  "Jeremiah":"예레미야","Lamentations":"예레미야애가","Ezekiel":"에스겔","Daniel":"다니엘",
+  "Hosea":"호세아","Joel":"요엘","Amos":"아모스","Obadiah":"오바댜","Jonah":"요나",
+  "Micah":"미가","Nahum":"나훔","Habakkuk":"하박국","Zephaniah":"스바냐","Haggai":"학개",
+  "Zechariah":"스가랴","Malachi":"말라기","Matthew":"마태복음","Mark":"마가복음",
+  "Luke":"누가복음","John":"요한복음","Acts":"사도행전","Romans":"로마서",
+  "1 Corinthians":"고린도전서","2 Corinthians":"고린도후서","Galatians":"갈라디아서",
+  "Ephesians":"에베소서","Philippians":"빌립보서","Colossians":"골로새서",
+  "1 Thessalonians":"데살로니가전서","2 Thessalonians":"데살로니가후서",
+  "1 Timothy":"디모데전서","2 Timothy":"디모데후서","Titus":"디도서",
+  "Philemon":"빌레몬서","Hebrews":"히브리서","James":"야고보서",
+  "1 Peter":"베드로전서","2 Peter":"베드로후서","1 John":"요한일서",
+  "2 John":"요한이서","3 John":"요한삼서","Jude":"유다서","Revelation":"요한계시록"
+};
 
-  <main id="list"></main>
+const WD_KO = ["일","월","화","수","목","금","토"];
 
-  <script>
-    // ---- Storage Keys
-    const STORAGE_CHECKS = "bible_reading_checks_v2";
-    const STORAGE_START  = "bible_start_date_v2";
+function isWeekend(d){ return d.getDay()===0 || d.getDay()===6; }
+function isChristmas(d){ return d.getMonth()===11 && d.getDate()===25; }
+function isOffDay(d){ return isWeekend(d) || isChristmas(d); }
+function fmtDate(d){
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")} (${WD_KO[d.getDay()]})`;
+}
+function bookName(b){ return BOOK_KO[b] || b; }
+function isNT(b){ return NT_BOOKS.has(b); }
 
-    // ---- State
-    let PLAN = [];
-    let CHECKS = {};
-    let FILTER = "";
-    let VIEW_MODE = "all";
+function buildDayMap(start){
+  const map = {};
+  let d = new Date(start+"T00:00:00");
+  while(isOffDay(d)) d.setDate(d.getDate()+1);
+  for(let day=1; day<=PLAN.length; day++){
+    while(isOffDay(d)) d.setDate(d.getDate()+1);
+    map[day]=fmtDate(d);
+    d.setDate(d.getDate()+1);
+  }
+  return map;
+}
 
-    // ---- NT books (to split OT/NT accurately)
-    const NT_BOOKS = new Set([
-      "Matthew","Mark","Luke","John","Acts","Romans",
-      "1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians",
-      "1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon",
-      "Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"
-    ]);
+function updateToday(){
+  const start = localStorage.getItem(STORAGE_START);
+  const box = document.getElementById("todayBox");
+  if(!start){ box.textContent="오늘 분량: 시작일 설정 필요"; return; }
+  let d = new Date(start+"T00:00:00");
+  while(isOffDay(d)) d.setDate(d.getDate()+1);
+  let today = new Date(); today.setHours(0,0,0,0);
+  let dayNum=0;
+  while(d<=today){ if(!isOffDay(d)) dayNum++; d.setDate(d.getDate()+1); }
+  const item = PLAN.find(p=>p.day===dayNum);
+  box.textContent = item ? `오늘 분량: Day ${dayNum} · ${item.type==="buffer"?"따라잡기/복습":item.title}` : "오늘 분량: 완료";
+}
 
-    // ---- Korean book names
-    const BOOK_KO = {
-      "Genesis":"창세기","Exodus":"출애굽기","Leviticus":"레위기","Numbers":"민수기","Deuteronomy":"신명기",
-      "Joshua":"여호수아","Judges":"사사기","Ruth":"룻기","1 Samuel":"사무엘상","2 Samuel":"사무엘하",
-      "1 Kings":"열왕기상","2 Kings":"열왕기하","1 Chronicles":"역대상","2 Chronicles":"역대하",
-      "Ezra":"에스라","Nehemiah":"느헤미야","Esther":"에스더","Job":"욥기","Psalms":"시편",
-      "Proverbs":"잠언","Ecclesiastes":"전도서","Song of Solomon":"아가","Isaiah":"이사야",
-      "Jeremiah":"예레미야","Lamentations":"예레미야애가","Ezekiel":"에스겔","Daniel":"다니엘",
-      "Hosea":"호세아","Joel":"요엘","Amos":"아모스","Obadiah":"오바댜","Jonah":"요나",
-      "Micah":"미가","Nahum":"나훔","Habakkuk":"하박국","Zephaniah":"스바냐","Haggai":"학개",
-      "Zechariah":"스가랴","Malachi":"말라기",
-      "Matthew":"마태복음","Mark":"마가복음","Luke":"누가복음","John":"요한복음","Acts":"사도행전",
-      "Romans":"로마서","1 Corinthians":"고린도전서","2 Corinthians":"고린도후서","Galatians":"갈라디아서",
-      "Ephesians":"에베소서","Philippians":"빌립보서","Colossians":"골로새서",
-      "1 Thessalonians":"데살로니가전서","2 Thessalonians":"데살로니가후서",
-      "1 Timothy":"디모데전서","2 Timothy":"디모데후서","Titus":"디도서","Philemon":"빌레몬서",
-      "Hebrews":"히브리서","James":"야고보서","1 Peter":"베드로전서","2 Peter":"베드로후서",
-      "1 John":"요한일서","2 John":"요한이서","3 John":"요한삼서","Jude":"유다서","Revelation":"요한계시록"
-    };
+function updateStats(){
+  let done=Object.values(CHECKS).filter(Boolean).length;
+  document.getElementById("progressAll").textContent=`전체: ${done}/${PLAN.length}`;
+  let otT=0,otD=0,ntT=0,ntD=0;
+  PLAN.forEach(p=>{
+    if(p.type!=="read") return;
+    let nt=isNT(p.readings[0].book);
+    if(nt){ntT++; if(CHECKS[p.day]) ntD++;}
+    else{otT++; if(CHECKS[p.day]) otD++;}
+  });
+  document.getElementById("progressOT").textContent=`구약: ${otD}/${otT}`;
+  document.getElementById("progressNT").textContent=`신약: ${ntD}/${ntT}`;
+}
 
-    function bookName(en) { return BOOK_KO[en] || en; }
-    function isNT(bookEn) { return NT_BOOKS.has(bookEn); }
-    function isWeekend(d){ const x=d.getDay(); return x===0 || x===6; }
-    function toDateOnly(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function render(){
+  const root=document.getElementById("list");
+  root.innerHTML="";
+  PLAN.forEach(p=>{
+    if(VIEW_MODE==="done" && !CHECKS[p.day]) return;
+    if(VIEW_MODE==="todo" && CHECKS[p.day]) return;
+    if(FILTER && !(`${p.day} ${p.title}`.includes(FILTER))) return;
+    const row=document.createElement("div");
+    row.className="row"+(CHECKS[p.day]?" done":"");
+    row.onclick=()=>{CHECKS[p.day]=!CHECKS[p.day]; localStorage.setItem(STORAGE_CHECKS,JSON.stringify(CHECKS)); updateStats(); render();};
+    row.innerHTML=`
+      <div class="day">Day ${p.day}\n${DAY_TO_DATE[p.day]||""}</div>
+      <div class="title">
+        <div class="t1">${p.type==="buffer"?"따라잡기/복습":p.title.replace(/Genesis|Exodus|Leviticus|Numbers|Deuteronomy|Joshua|Judges|Ruth|1 Samuel|2 Samuel|1 Kings|2 Kings|1 Chronicles|2 Chronicles|Ezra|Nehemiah|Esther|Job|Psalms|Proverbs|Ecclesiastes|Song of Solomon|Isaiah|Jeremiah|Lamentations|Ezekiel|Daniel|Hosea|Joel|Amos|Obadiah|Jonah|Micah|Nahum|Habakkuk|Zephaniah|Haggai|Zechariah|Malachi|Matthew|Mark|Luke|John|Acts|Romans|1 Corinthians|2 Corinthians|Galatians|Ephesians|Philippians|Colossians|1 Thessalonians|2 Thessalonians|1 Timothy|2 Timothy|Titus|Philemon|Hebrews|James|1 Peter|2 Peter|1 John|2 John|3 John|Jude|Revelation/g,m=>BOOK_KO[m])}</div>
+        <div class="t2">${p.type==="read"?p.readings.map(r=>`${bookName(r.book)} ${r.chapter}장`).join(", "):""}</div>
+      </div>
+      <div class="check">${CHECKS[p.day]?"✅":"⬜️"}</div>`;
+    root.appendChild(row);
+  });
+}
 
-    function loadChecks() {
-      try { CHECKS = JSON.parse(localStorage.getItem(STORAGE_CHECKS) || "{}") || {}; }
-      catch { CHECKS = {}; }
-    }
-    function saveChecks() {
-      localStorage.setItem(STORAGE_CHECKS, JSON.stringify(CHECKS));
-      updateStats();
-      updateTodayBox();
-    }
+async function init(){
+  CHECKS=JSON.parse(localStorage.getItem(STORAGE_CHECKS)||"{}");
+  const res=await fetch("./plan.json");
+  const data=await res.json();
+  PLAN=data.plan;
+  const start=localStorage.getItem(STORAGE_START);
+  if(start){ document.getElementById("startDate").value=start; DAY_TO_DATE=buildDayMap(start); }
+  updateStats(); updateToday(); render();
+  if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js");
+}
 
-    function updateStats() {
-      // Overall
-      const total = PLAN.length;
-      const done = Object.values(CHECKS).filter(Boolean).length;
-      const pct = total ? Math.round((done/total)*100) : 0;
-      document.getElementById("progressAll").textContent = `전체: ${done}/${total} (${pct}%)`;
+document.getElementById("startDate").onchange=e=>{
+  localStorage.setItem(STORAGE_START,e.target.value);
+  DAY_TO_DATE=buildDayMap(e.target.value);
+  updateToday(); render();
+};
+document.getElementById("viewMode").onchange=e=>{VIEW_MODE=e.target.value; render();};
+document.getElementById("q").oninput=e=>{FILTER=e.target.value; render();};
+document.getElementById("clearSearch").onclick=()=>{FILTER=""; document.getElementById("q").value=""; render();};
+document.getElementById("goTodayBtn").onclick=()=>updateToday();
+document.getElementById("resetBtn").onclick=()=>{if(confirm("초기화?")){CHECKS={}; localStorage.setItem(STORAGE_CHECKS,"{}"); updateStats(); render();}};
+document.getElementById("exportBtn").onclick=()=>{
+  const blob=new Blob([JSON.stringify({checks:CHECKS,start:localStorage.getItem(STORAGE_START)},null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="bible-backup.json"; a.click();
+};
+document.getElementById("importFile").onchange=async e=>{
+  const t=await e.target.files[0].text(); const j=JSON.parse(t);
+  CHECKS=j.checks||{}; localStorage.setItem(STORAGE_CHECKS,JSON.stringify(CHECKS));
+  if(j.start){ localStorage.setItem(STORAGE_START,j.start); document.getElementById("startDate").value=j.start; DAY_TO_DATE=buildDayMap(j.start); }
+  updateStats(); updateToday(); render();
+};
 
-      // OT/NT (exclude buffer from OT/NT stats)
-      let otTotal=0, otDone=0, ntTotal=0, ntDone=0;
-      for (const item of PLAN) {
-        if (item.type !== "read" || !item.readings || item.readings.length===0) continue;
-        const firstBook = item.readings[0].book;
-        const doneThis = !!CHECKS[item.day];
-        if (isNT(firstBook)) {
-          ntTotal++; if (doneThis) ntDone++;
-        } else {
-          otTotal++; if (doneThis) otDone++;
-        }
-      }
-      const otPct = otTotal ? Math.round((otDone/otTotal)*100) : 0;
-      const ntPct = ntTotal ? Math.round((ntDone/ntTotal)*100) : 0;
-      document.getElementById("progressOT").textContent = `구약: ${otDone}/${otTotal} (${otPct}%)`;
-      document.getElementById("progressNT").textContent = `신약: ${ntDone}/${ntTotal} (${ntPct}%)`;
-    }
-
-    function readingTitleKo(item){
-      // item.title may contain English book names; replace them
-      let t = item.title || "";
-      for (const [en, ko] of Object.entries(BOOK_KO)) {
-        // simple replace (works well for our titles)
-        t = t.split(en).join(ko);
-      }
-      return t;
-    }
-
-    function readingDetailKo(item){
-      if (item.type !== "read") return "밀린 분량을 따라잡거나, 복습/묵상용으로 사용하세요.";
-      return item.readings.map(r => `${bookName(r.book)} ${r.chapter}장`).join(", ");
-    }
-
-    function matchesFilter(item) {
-      // View mode
-      if (VIEW_MODE === "done" && !CHECKS[item.day]) return false;
-      if (VIEW_MODE === "todo" && !!CHECKS[item.day]) return false;
-
-      // Text filter
-      if (!FILTER) return true;
-      const f = FILTER.toLowerCase();
-      const hay = [
-        `day ${item.day}`,
-        item.type,
-        readingTitleKo(item),
-        readingDetailKo(item)
-      ].join(" ").toLowerCase();
-      return hay.includes(f);
-    }
-
-    function render() {
-      const root = document.getElementById("list");
-      root.innerHTML = "";
-
-      const frag = document.createDocumentFragment();
-
-      for (const item of PLAN) {
-        if (!matchesFilter(item)) continue;
-
-        const isDone = !!CHECKS[item.day];
-
-        const row = document.createElement("div");
-        row.className = "row" + (isDone ? " done" : "");
-        row.id = `day-${item.day}`;
-        row.addEventListener("click", () => {
-          CHECKS[item.day] = !CHECKS[item.day];
-          saveChecks();
-          render();
-        });
-
-        const day = document.createElement("div");
-        day.className = "day";
-        day.textContent = `Day ${item.day}`;
-
-        const title = document.createElement("div");
-        title.className = "title";
-
-        const t1 = document.createElement("div");
-        t1.className = "t1";
-        t1.textContent = item.type === "buffer" ? "따라잡기/복습" : readingTitleKo(item);
-
-        const t2 = document.createElement("div");
-        t2.className = "t2";
-        t2.textContent = readingDetailKo(item);
-
-        const check = document.createElement("div");
-        check.className = "check";
-        check.textContent = isDone ? "✅" : "⬜️";
-
-        title.appendChild(t1);
-        title.appendChild(t2);
-
-        row.appendChild(day);
-        row.appendChild(title);
-        row.appendChild(check);
-
-        frag.appendChild(row);
-      }
-
-      root.appendChild(frag);
-    }
-
-    // ---- Today plan (skip Sat/Sun)
-    function weekdayIndexFromStart(startDateStr, todayDate) {
-      // returns Day number (1-based), counting weekdays only
-      let d = toDateOnly(new Date(startDateStr));
-      let t = toDateOnly(new Date(todayDate));
-
-      // if start is weekend, move to next weekday
-      while (isWeekend(d)) d.setDate(d.getDate() + 1);
-
-      let count = 0;
-      while (d <= t) {
-        if (!isWeekend(d)) count++;
-        d.setDate(d.getDate() + 1);
-      }
-      return count; // 1..260
-    }
-
-    function updateTodayBox(){
-      const box = document.getElementById("todayBox");
-      const start = localStorage.getItem(STORAGE_START);
-
-      if (!start) {
-        box.textContent = "오늘 분량: 시작일을 설정하세요";
-        return;
-      }
-
-      const dayNum = weekdayIndexFromStart(start, new Date());
-      const item = PLAN.find(p => p.day === dayNum);
-
-      if (!item) {
-        if (dayNum > PLAN.length) {
-          box.textContent = `오늘 분량: 완료! (Day ${PLAN.length} 이후)`;
-        } else {
-          box.textContent = `오늘 분량: Day ${dayNum} (플랜 없음)`;
-        }
-        return;
-      }
-
-      const title = (item.type === "buffer") ? "따라잡기/복습" : readingTitleKo(item);
-      box.textContent = `오늘 분량: Day ${dayNum} · ${title}`;
-    }
-
-    function scrollToDay(dayNum){
-      const el = document.getElementById(`day-${dayNum}`);
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    // ---- Backup
-    function exportBackup(){
-      const payload = {
-        savedAt: new Date().toISOString(),
-        checks: CHECKS,
-        startDate: localStorage.getItem(STORAGE_START) || null
-      };
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "bible-check-backup.json";
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    async function importBackup(file){
-      const text = await file.text();
-      const parsed = JSON.parse(text);
-      if (!parsed || typeof parsed !== "object" || !parsed.checks) throw new Error("형식 오류");
-
-      CHECKS = parsed.checks || {};
-      localStorage.setItem(STORAGE_CHECKS, JSON.stringify(CHECKS));
-
-      if (parsed.startDate) {
-        localStorage.setItem(STORAGE_START, parsed.startDate);
-        document.getElementById("startDate").value = parsed.startDate;
-      }
-
-      updateStats();
-      updateTodayBox();
-      render();
-    }
-
-    // ---- Init
-    async function init(){
-      loadChecks();
-
-      // load plan.json
-      const res = await fetch("./plan.json", { cache: "no-store" });
-      const data = await res.json();
-      PLAN = data.plan || data?.plan || [];
-
-      // restore start date
-      const savedStart = localStorage.getItem(STORAGE_START);
-      if (savedStart) document.getElementById("startDate").value = savedStart;
-
-      updateStats();
-      updateTodayBox();
-      render();
-
-      // register SW
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("./sw.js");
-      }
-    }
-
-    // ---- Events
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      if (!confirm("정말 전체 체크를 초기화하시겠습니까?")) return;
-      CHECKS = {};
-      saveChecks();
-      render();
-    });
-
-    document.getElementById("exportBtn").addEventListener("click", exportBackup);
-
-    document.getElementById("importFile").addEventListener("change", async (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      try {
-        await importBackup(file);
-        alert("백업 가져오기가 완료되었습니다.");
-      } catch {
-        alert("백업 파일 형식이 올바르지 않습니다.");
-      } finally {
-        e.target.value = "";
-      }
-    });
-
-    document.getElementById("startDate").addEventListener("change", (e) => {
-      const v = e.target.value;
-      if (v) localStorage.setItem(STORAGE_START, v);
-      updateTodayBox();
-    });
-
-    document.getElementById("viewMode").addEventListener("change", (e) => {
-      VIEW_MODE = e.target.value;
-      render();
-    });
-
-    document.getElementById("q").addEventListener("input", (e) => {
-      FILTER = e.target.value.trim();
-      render();
-    });
-
-    document.getElementById("clearSearch").addEventListener("click", () => {
-      FILTER = "";
-      document.getElementById("q").value = "";
-      render();
-    });
-
-    document.getElementById("goTodayBtn").addEventListener("click", () => {
-      const start = localStorage.getItem(STORAGE_START);
-      if (!start) { alert("먼저 시작일을 설정해 주세요."); return; }
-      const dayNum = weekdayIndexFromStart(start, new Date());
-      scrollToDay(dayNum);
-    });
-
-    init();
-  </script>
+init();
+</script>
 </body>
 </html>
