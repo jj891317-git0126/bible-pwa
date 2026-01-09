@@ -11,7 +11,6 @@
   <title>성경 통독 (평일 1년)</title>
 
   <style>
-    :root { color-scheme: light; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
       margin: 0; background: #ffffff; color: #0f172a;
@@ -51,14 +50,13 @@
     }
     .row.done { background: #f6fff6; }
     .day {
-      width: 86px; font-weight: 800; font-size: 13px;
-      white-space: pre-line; color: #0f172a;
+      width: 92px; font-weight: 900; font-size: 13px;
+      white-space: pre-line;
     }
     .title { flex: 1; }
-    .title .t1 { font-size: 14px; font-weight: 800; }
+    .title .t1 { font-size: 14px; font-weight: 900; }
     .title .t2 { margin-top: 5px; font-size: 12px; color: #475569; line-height: 1.35; }
     .check { font-size: 20px; }
-    .hint { margin-top: 8px; font-size: 12px; color: #64748b; }
 
     /* 축하 모달 */
     .overlay {
@@ -112,12 +110,8 @@
     </div>
 
     <div class="search">
-      <input id="q" type="text" placeholder="검색: 창세기, 요한복음, Day 120" />
+      <input id="q" type="text" placeholder="검색: 창세기, 요한복음, Day 120, 1/1/26" />
       <button class="btn" id="clearSearch">지우기</button>
-    </div>
-
-    <div class="hint">
-      규칙: <b>주말(토/일) 제외</b>. 시작일 기준으로 Day마다 날짜가 자동 표시됩니다.
     </div>
   </header>
 
@@ -136,9 +130,9 @@
 
   <script>
     // ---- Storage Keys
-    const STORAGE_CHECKS = "bible_reading_checks_v3";
-    const STORAGE_START  = "bible_start_date_v3";
-    const STORAGE_CELEB  = "bible_month_celebrated_v3"; // { "2026-01": true, ... }
+    const STORAGE_CHECKS = "bible_reading_checks_v4";
+    const STORAGE_START  = "bible_start_date_v4";
+    const STORAGE_CELEB  = "bible_month_celebrated_v4"; // { "2026-01": true, ... }
 
     // ---- State
     let PLAN = [];
@@ -146,12 +140,9 @@
     let FILTER = "";
     let VIEW_MODE = "all";
 
-    // Day -> Date objects / labels
-    let DAY_TO_DATE_OBJ = {};  // { 1: Date, 2: Date, ... }
-    let DAY_TO_DATE_STR = {};  // { 1: "1/1/26", ... }
-
-    // MonthKey -> day numbers in that month
-    let MONTH_TO_DAYS = {}; // { "2026-01": [1,2,...], ... }
+    // Day -> Date label
+    let DAY_TO_DATE_STR = {};   // { 1: "1/1/26", ... }
+    let MONTH_TO_DAYS = {};     // { "2026-01": [day, ...], ... }
 
     // ---- NT books (OT/NT progress)
     const NT_BOOKS = new Set([
@@ -174,7 +165,7 @@
       "Zechariah":"스가랴","Malachi":"말라기",
       "Matthew":"마태복음","Mark":"마가복음","Luke":"누가복음","John":"요한복음","Acts":"사도행전",
       "Romans":"로마서","1 Corinthians":"고린도전서","2 Corinthians":"고린도후서","Galatians":"갈라디아서",
-      "Ephesians":"에베소서","Philippians":"빌립보서","Colossians":"골로새서",
+      "Ephesians":"에베소서","Philippians":"빌레립보서","Colossians":"골로새서",
       "1 Thessalonians":"데살로니가전서","2 Thessalonians":"데살로니가후서",
       "1 Timothy":"디모데전서","2 Timothy":"디모데후서","Titus":"디도서","Philemon":"빌레몬서",
       "Hebrews":"히브리서","James":"야고보서","1 Peter":"베드로전서","2 Peter":"베드로후서",
@@ -184,35 +175,5 @@
     function bookName(en) { return BOOK_KO[en] || en; }
     function isNT(bookEn) { return NT_BOOKS.has(bookEn); }
 
-    // ---- Dates / weekdays
-    function isWeekend(d){ const x=d.getDay(); return x===0 || x===6; }
-    function toDateOnly(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
-
-    // M/D/YY (예: 1/1/26)
-    function fmtMDYY(d){
-      const mm = d.getMonth()+1;
-      const dd = d.getDate();
-      const yy = String(d.getFullYear()).slice(-2);
-      return `${mm}/${dd}/${yy}`;
-    }
-    function monthKey(d){
-      const y = d.getFullYear();
-      const m = String(d.getMonth()+1).padStart(2,"0");
-      return `${y}-${m}`; // e.g., 2026-01
-    }
-    function monthLabelKo(key){
-      const [y,m] = key.split("-");
-      return `${y}년 ${parseInt(m,10)}월`;
-    }
-
-    // ---- Load/Save
-    function loadChecks() {
-      try { CHECKS = JSON.parse(localStorage.getItem(STORAGE_CHECKS) || "{}") || {}; }
-      catch { CHECKS = {}; }
-    }
-    function saveChecks() {
-      localStorage.setItem(STORAGE_CHECKS, JSON.stringify(CHECKS));
-      updateStats();
-      updateTodayBox();
-      maybeCelebrateMonthlyCompletion();
-    }
+    // ---- Dates
+    function toDateOnly(d){ return new Date(d.getFullYear(), d.getMonth(), d.g
